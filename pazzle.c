@@ -19,6 +19,7 @@ int main (int argc,char *argv[]){
     // 各種宣言
     int x, y, i, u, e, count;
     struct stage map;
+    printf("<!-- pazzle.cgi -- >\n");
     // 引数がある場合、ファイルを読み込む。
     if (argc == 2){
         printf("ファイル読み込み\n");
@@ -49,7 +50,7 @@ int main (int argc,char *argv[]){
         map.num[0][0] = -1;
     }
     // Debug
-    printf("<-- DEBUG # ");
+    printf("<!-- DEBUG # ");
     for(i=0; i<X; i++){
         for(u=0; u<Y; u++){
             printf("%2d",map.num[i][u]);
@@ -134,5 +135,15 @@ int footer(void){
     return 0;
 }
 int outputdata(struct stage map, int count){
-    printf("a");
+    int i, u;
+    FILE *fp;
+    fp = fopen("./temp/stage.dat","w");
+    for (i=0; i<X; i++){
+        for(u=0; u<Y; u++){
+            fprintf(fp, "%d ", map.num[i][u]);
+        }
+    }
+    fprintf(fp, "%d", count);
+    fclose(fp);
+    return 0;
 }
