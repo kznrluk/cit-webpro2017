@@ -18,16 +18,35 @@ int outputdata(struct stage, int count);
 int main (int argc,char *argv[]){
     // 各種宣言
     int x, y, i, u, e, count;
+    int size = X * Y;
+    int mapseed[size];
     struct stage map;
-    printf("<!-- pazzle.cgi -- >\n");
+
+    printf("%s %s", argv[1], argv[2]);
+    atoi(argv[1]
+    printf("<!-- pazzle.cgi -->\n");
     // 引数がある場合、ファイルを読み込む。
-    if (argc == 2){
-        printf("ファイル読み込み\n");
+    if (argc >= 2){
+        printf("<!-- ファイル読み込み -->\n");
+        FILE *fd;
+        char fmap[32];
+        fd = fopen("./temp/stage.dat","r");
+        fgets(fmap,32,fd);
+
+        mapseed[0] = atoi(strtok(fmap, ","));
+        e = 1;
+        while(fmap != NULL){
+            mapseed[e] = atoi(strtok(NULL, ","));
+            if(e == size - 1){
+                count = atoi(strtok(NULL, ","));
+                break;
+            }
+            e++;
+        }
+        fclose(fd);
     }
     // 引数がない場合、初回起動処理に移行。
     else {
-        int size = X * Y;
-        int mapseed[size];
         // まず配列に0,1,2... と格納する。
         for (i=0; i < size; i++){
             mapseed[i] = i;
@@ -39,16 +58,18 @@ int main (int argc,char *argv[]){
             mapseed[i] = mapseed[j];
             mapseed[j] = t;
         }
-        // バラバラになった数字を配列に格納する。
-        for(i=0; i<X; i++){
-            for(u=0; u<Y; u++){
-                map.num[i][u] = mapseed[e];
-                e++;
-            }
-        }
-        // 右上に空白を挿入する。
-        map.num[0][0] = -1;
     }
+    // バラバラになった数字を配列に格納する。
+    e = 0;
+    for(i=0; i<X; i++){
+        for(u=0; u<Y; u++){
+            map.num[i][u] = mapseed[e];
+            e++;
+        }
+    }
+    // 右上に空白を挿入する。
+    map.num[0][0] = -1;
+
     // Debug
     printf("<!-- DEBUG # ");
     for(i=0; i<X; i++){
@@ -140,7 +161,7 @@ int outputdata(struct stage map, int count){
     fp = fopen("./temp/stage.dat","w");
     for (i=0; i<X; i++){
         for(u=0; u<Y; u++){
-            fprintf(fp, "%d ", map.num[i][u]);
+            fprintf(fp, "%d,", map.num[i][u]);
         }
     }
     fprintf(fp, "%d", count);
