@@ -18,12 +18,11 @@ int outputdata(struct stage, int count);
 int main (int argc,char *argv[]){
     // 各種宣言
     int x, y, i, u, e, count;
-    int size = X * Y;
+    int mx, my;
+    int size = X*Y;
     int mapseed[size];
     struct stage map;
-
-    printf("%s %s", argv[1], argv[2]);
-    atoi(argv[1]
+    char buff[5];
     printf("<!-- pazzle.cgi -->\n");
     // 引数がある場合、ファイルを読み込む。
     if (argc >= 2){
@@ -43,7 +42,28 @@ int main (int argc,char *argv[]){
             }
             e++;
         }
+        e = 0;
+        for(i=0; i<X; i++){
+            for(u=0; u<Y; u++){
+                map.num[i][u] = mapseed[e];
+                e++;
+            }
+        }
         fclose(fd);
+        mx = atoi(argv[1]);
+        my = atoi(argv[2]);
+        // 動かす
+        for (i=0;i<X;i++){
+            for (u=0;u<Y;u++){
+                if (map.num[i][u] == -1){
+                    if (mx == i && my == u - 1 || mx == i && my == u + 1 || my == u && mx == i + 1 || my == u && mx == i - 1){
+                        map.num[i][u] = map.num[mx][my];
+                        map.num[mx][my] = -1;
+                    }
+                }
+            }
+        }
+        count++;
     }
     // 引数がない場合、初回起動処理に移行。
     else {
@@ -58,17 +78,17 @@ int main (int argc,char *argv[]){
             mapseed[i] = mapseed[j];
             mapseed[j] = t;
         }
-    }
-    // バラバラになった数字を配列に格納する。
-    e = 0;
-    for(i=0; i<X; i++){
-        for(u=0; u<Y; u++){
-            map.num[i][u] = mapseed[e];
-            e++;
+        // バラバラになった数字を配列に格納する。
+        e = 0;
+        for(i=0; i<X; i++){
+            for(u=0; u<Y; u++){
+                map.num[i][u] = mapseed[e];
+                e++;
+            }
         }
+        map.num[0][0] = -1;
     }
     // 右上に空白を挿入する。
-    map.num[0][0] = -1;
 
     // Debug
     printf("<!-- DEBUG # ");
@@ -98,9 +118,7 @@ int moving (struct stage map, int x, int y, int move){
                 if (x == i && y == u - 1 || x == i && y == u + 1 || y == u && x == i + 1 || y == u && x == i - 1){
                     if (move){
                         //移動処理
-                        map.num[i][u] = map.num[x][y];
-                        map.num[x][y] = -1;
-                        return 0;
+                        return i,u;
                     }
                     else{
                         return 0;
@@ -128,7 +146,7 @@ int outputhtml (struct stage map, int count){
                 printf("<td><img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
             }
             else{
-                printf("<td><a href='pazzle.cgi?x=%d?y=%d'><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
+                printf("<td><a href='pazzle.cgi?%d?%d'><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
             }
         }
     }
