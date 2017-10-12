@@ -18,7 +18,7 @@ int footer(void);
 
 int main (int argc,char *argv[]){
     // 各種宣言
-    int x, y, i, u;
+    int x, y, i, u, e;
     struct stage map;
     // 引数がある場合、ファイルを読み込む。
     if (argc == 2){
@@ -40,7 +40,6 @@ int main (int argc,char *argv[]){
             mapseed[j] = t;
         }
         // バラバラになった数字を配列に格納する。
-        int e = 0;
         for(i=0; i<X; i++){
             for(u=0; u<Y; u++){
                 map.num[i][u] = mapseed[e];
@@ -60,13 +59,34 @@ int main (int argc,char *argv[]){
     printf(" -->\n");
 
     // クリックされた場所の隣に空白配列(-1)があるかどうかをチェックする。
-    // checkarg();
+    //if (checkarg()){    }
     output(map);
     return 0;
 }
 
 int checkarg (int arg){
-    
+    printf("a");
+}
+
+// この処理は蛇足かも。
+int moving (struct stage map, int x, int y, int move){
+    int i, u;
+    // 隣り合った数が-1の時
+    // ネストの深さは闇の深さ。要改善。
+    for (i=0;i<X;i++){
+        for (u=0;u<Y;u++){
+            if (map.num[i][u] == -1){
+                if (x == i && y == u - 1 || x == i && y == u + 1 || y == u && x == i + 1 || y == u && x == i - 1){
+                  if (move){
+                      //移動処理
+                  }
+                  else{
+                    return 0;
+                  }
+                }
+            }
+        }
+    }
 }
 
 int output (struct stage map){
@@ -78,12 +98,15 @@ int output (struct stage map){
     //ボディの出力
     for (i=0; i<X; i++){
         printf("<tr>\n");
-        for(u=0; u<Y; u++){
+        for (u=0; u<Y; u++){
             if (map.num[i][u] == -1){
                 printf("<td></td>\n");
             }
+            else if (moving(map, i, u, 0)){
+                printf("<td><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
+            }
             else{
-                printf("<td><a href='pazzle.cgi?x=%d?y=%d'><img src='./temp/slide-%d.png'>\n", i, u, map.num[i][u]);
+                printf("<td><a href='pazzle.cgi?x=%d?y=%d'><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
             }
         }
     }
