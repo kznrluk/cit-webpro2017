@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define  BUFFER 1024
 #define X 3
 #define Y 3
 
@@ -10,15 +9,15 @@ struct stage{
     int num[X][Y];
 };
 
-int readfile(void);
 int firstentry(void);
-int output(struct stage);
+int outputhtml(struct stage, int count);
 int header(void);
 int footer(void);
+int outputdata(struct stage, int count);
 
 int main (int argc,char *argv[]){
     // 各種宣言
-    int x, y, i, u, e;
+    int x, y, i, u, e, count;
     struct stage map;
     // 引数がある場合、ファイルを読み込む。
     if (argc == 2){
@@ -60,12 +59,10 @@ int main (int argc,char *argv[]){
 
     // クリックされた場所の隣に空白配列(-1)があるかどうかをチェックする。
     //if (checkarg()){    }
-    output(map);
+    outputhtml(map,count);
+    // 現在状況をファイルへ出力
+    outputdata(map,count);
     return 0;
-}
-
-int checkarg (int arg){
-    printf("a");
 }
 
 // この処理は蛇足かも。
@@ -77,19 +74,22 @@ int moving (struct stage map, int x, int y, int move){
         for (u=0;u<Y;u++){
             if (map.num[i][u] == -1){
                 if (x == i && y == u - 1 || x == i && y == u + 1 || y == u && x == i + 1 || y == u && x == i - 1){
-                  if (move){
-                      //移動処理
-                  }
-                  else{
-                    return 0;
-                  }
+                    if (move){
+                        //移動処理
+                        map.num[i][u] = map.num[x][y];
+                        map.num[x][y] = -1;
+                        return 0;
+                    }
+                    else{
+                        return 0;
+                    }
                 }
             }
         }
     }
 }
 
-int output (struct stage map){
+int outputhtml (struct stage map, int count){
     //各種宣言
     int i, u;
     //ヘッダの出力
@@ -103,7 +103,7 @@ int output (struct stage map){
                 printf("<td></td>\n");
             }
             else if (moving(map, i, u, 0)){
-                printf("<td><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
+                printf("<td><img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
             }
             else{
                 printf("<td><a href='pazzle.cgi?x=%d?y=%d'><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
@@ -111,7 +111,8 @@ int output (struct stage map){
         }
     }
     printf("</table>\n");
-    //フッタの出力
+    printf("<h2>現在のスコア:%3d</h2>\n", count);
+    // フッタの出力
     footer();
 }
 
@@ -131,4 +132,7 @@ int footer(void){
     printf("</body>\n");
     printf("</html>\n");
     return 0;
+}
+int outputdata(struct stage map, int count){
+    printf("a");
 }
