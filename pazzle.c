@@ -1,117 +1,125 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#define X 3
-#define Y 3
+#include <string.h>
+#define XU 3
+#define YU 3
 
-// æ§‹é€ ä½“ äºŒæ¬¡å…ƒé…åˆ—ã«ã™ã‚‹ã‹ å¤‰æ•°ã«ã™ã‚‹ã‹
 struct stage{
-    int num[X][Y];
+    int num[XU][YU];
     int count;
 };
 
 void fstgetin (struct stage *map);
-void scdgetin (struct stage *map, int, int);
+int scdgetin (struct stage *map, int, int);
 void moving (struct stage *map, int, int);
 int judge (struct stage *map, int, int, int, int, int);
-int outputhtml(struct stage);
+void outputhtml(struct stage);
 void header(void);
 void footer(void);
 int outputdata(struct stage);
 
-int main (int argc,char *argv[]){
-    // å„ç¨®å®£è¨€ è­¦å‘ŠãŒå‡ºã‚‹ã®ã§ä¸€å¿œåˆæœŸåŒ–ã—ã¦ãŠãã€‚
+int main(int argc,char *argv[]){
+    // ŠeíéŒ¾ Œx‚ªo‚é‚Ì‚Åˆê‰‰Šú‰»‚µ‚Ä‚¨‚­B
     int i, u;
     struct stage map;
-    for(i=0; i<X; i++){
-        for(u=0; u<Y; u++){
+    for(i=0; i<XU; i++){
+        for(u=0; u<YU; u++){
             map.num[i][u] = 0;
         }
     }
     map.count = 0;
-    // å¼•æ•°ãŒã‚ã‚‹å ´åˆã€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€ã€‚
-    if (argc > 1){
+    // ˆø”‚ª‚ ‚éê‡Aƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚ŞB
+    if (argc >= 2){
         int mx, my;
         mx = atoi(argv[1]);
         my = atoi(argv[2]);
         scdgetin(&map, mx, my);
-    }
-    // å¼•æ•°ãŒãªã„å ´åˆã€åˆå›èµ·å‹•å‡¦ç†ã«ç§»è¡Œã€‚
-    else {
+    } else {
+        // ˆø”‚ª‚È‚¢ê‡A‰‰ñ‹N“®ˆ—‚ÉˆÚsB
         fstgetin(&map);
     }
-    // HTMLã®å‡ºåŠ›
+    // HTML‚Ìo—Í
     outputhtml(map);
-    // ãƒ•ã‚¡ã‚¤ãƒ«ã®å‡ºåŠ›
+    // ƒtƒ@ƒCƒ‹‚Ìo—Í
     outputdata(map);
     return 0;
 }
 
 void fstgetin (struct stage *map){
-    int mapseed[X*Y];
+    int mapseed[XU*YU];
     int i, u, e, j , t;
-    // ã¾ãšé…åˆ—ã«0,1,2... ã¨æ ¼ç´ã™ã‚‹ã€‚
-    for (i=0; i < X*Y; i++){
+    // ‚Ü‚¸”z—ñ‚É0,1,2... ‚ÆŠi”[‚·‚éB
+    for (i=1; i < XU*YU; i++){
         mapseed[i] = i;
     }
-    // ãã‚Œã‚’ã‚·ãƒ£ãƒƒãƒ•ãƒ«ã™ã‚‹ã€‚
-    for(i=0; i < X*Y; i++) {
-        j = rand()%X*Y;
+    // ‚»‚ê‚ğƒVƒƒƒbƒtƒ‹‚·‚éB
+    for(i=0; i < XU*YU; i++) {
+        j = rand()%XU*YU;
         t = mapseed[i];
         mapseed[i] = mapseed[j];
         mapseed[j] = t;
     }
-    // ãƒãƒ©ãƒãƒ©ã«ãªã£ãŸæ•°å­—ã‚’é…åˆ—ã«æ ¼ç´ã™ã‚‹ã€‚
-    for(e=0, i=0; i<X; i++){
-        for(u=0; u<Y; u++){
-            (*map).num[i][u] = mapseed[e];
+    // ƒoƒ‰ƒoƒ‰‚É‚È‚Á‚½”š‚ğ”z—ñ‚ÉŠi”[‚·‚éB
+    for(e=0, i=0; i<XU; i++){
+        for(u=0; u<YU; u++){
+            map->num[i][u] = mapseed[e];
             e++;
         }
     }
-    // å³ä¸Šã‚’ç©ºç™½ã«ã™ã‚‹ã€‚
-    (*map).num[0][0] = -1;
+    // ‰Eã‚ğ‹ó”’‚É‚·‚éB
+    map->num[0][0] = 0;
 }
 
-void scdgetin (struct stage *map, int x, int y){
+int scdgetin (struct stage *map, int x, int y){
     int i, u;
-    // ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
+    // ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
     FILE *fd;
     char fmap[32];
     fd = fopen("./temp/stage.dat","r");
+    if(fd == NULL) {
+        printf("File Pointer is NULL");
+        return -1;
+    }
     fgets(fmap, 32, fd);
-    fclose(fd);
-    // ä¿å­˜ã—ãŸé…åˆ—ã®å†…å®¹ã‚’èª­ã¿è¾¼ã¿
-    (*map).num[0][0] = atoi(strtok(fmap, ","));
-    for(i=0; i<X; i++){
-        for(u=0; u<Y; u++){
-            (*map).num[i][u] = atoi(strtok(NULL, ","));
+    // •Û‘¶‚µ‚½”z—ñ‚Ì“à—e‚ğ“Ç‚İ‚İ
+    for(i=0; i<XU; i++){
+        for(u=0; u<YU; u++){
+            if (i==0 && u ==0){
+                map->num[0][0] = atoi(strtok(fmap, ","));
+                printf("%d",map->num[0][0]);
+            } else {
+                map->num[i][u] = atoi(strtok(NULL, ","));
+                printf("%d",map->num[i][u]);
+            }
         }
     }
-    (*map).count = atoi(strtok(NULL, ",")) + 1;
-    // é…åˆ—ã‚’å‹•ã‹ã™
+    map->count = atoi(strtok(NULL, ",")) + 1;
+    fclose(fd);
+    // ”z—ñ‚ğ“®‚©‚·
     moving(map, x, y);
+    return 0;
 }
 
-// èª¬æ˜ã—ã‚ˆã†ï¼ã“ã®é–¢æ•°ã¯å®Ÿè¡Œã•ã‚Œã‚‹ã¨åŒæ™‚ã«æŒ‡å®šã•ã‚ŒãŸå ´æ‰€ã«éš£æ¥ã™ã‚‹ç©ºç™½ã«å€¤ã‚’æ›¸ãè¾¼ã‚€é–¢æ•°ã ï¼
+// à–¾‚µ‚æ‚¤I‚±‚ÌŠÖ”‚ÍÀs‚³‚ê‚é‚Æ“¯‚Éw’è‚³‚ê‚½êŠ‚É—×Ú‚·‚é‹ó”’‚É’l‚ğ‘‚«‚ŞŠÖ”‚¾I
 void moving (struct stage *map, int x, int y){
     int i, u;
-    for (i=0;i<X;i++){
-        for (u=0;u<Y;u++){
-            if((*map).num[i][u] == -1 && judge(map, x, y, i, u, 0)){
-                (*map).num[i][u] = (*map).num[x][y];
-                (*map).num[x][y] = -1;
+    for (i=0;i<XU;i++){
+        for (u=0;u<YU;u++){
+            if(map->num[i][u] == 0 && judge(map, x, y, i, u, 0)){
+                map->num[i][u] = map->num[x][y];
+                map->num[x][y] = 0;
             }
         }
     }
 }
 
-// ã‚³ã‚³ã‚‰ã¸ã‚“ã®æ›¸ãæ–¹ä¸‹æ‰‹ãã
+// ƒRƒR‚ç‚Ö‚ñ‚Ì‘‚«•û‰ºè‚­‚»
 int judge (struct stage *map, int x, int y, int i, int u, int getspace){
     if(getspace){
         int n, c;
-        for (n=0;n<X;n++){
-            for (c=0;c<Y;c++){
-                if((*map).num[i][u] == -1){
+        for (n=0;n<XU;n++){
+            for (c=0;c<YU;c++){
+                if(map->num[n][c] == 0){
                     i = n;
                     u = c;
                 }
@@ -120,42 +128,40 @@ int judge (struct stage *map, int x, int y, int i, int u, int getspace){
     }
     if((x == i && y == u - 1) || (x == i && y == u + 1) || (y == u && x == i + 1) || (y == u && x == i - 1)){
         return 1;
-    }
-    else{
+    } else {
         return 0;
     }
 }
 
-int outputhtml (struct stage map){
-    // å„ç¨®å®£è¨€
+void outputhtml (struct stage map){
+    // ŠeíéŒ¾
     int i, u;
-    // ãƒ˜ãƒƒãƒ€ã®å‡ºåŠ›
+    // ƒwƒbƒ_‚Ìo—Í
     header();
-    // ãƒœãƒ‡ã‚£ã®å‡ºåŠ›
+    // ƒ{ƒfƒB‚Ìo—Í
     printf("<table>\n");
-    for (i=0; i<X; i++){
+    for (i=0; i<XU; i++){
         printf("<tr>\n");
-        for (u=0; u<Y; u++){
-            // ç©ºç™½ãƒã‚¹ã¯ç©ºç™½è¡¨ç¤º
-            if (map.num[i][u] == -1){
+        for (u=0; u<YU; u++){
+            if (map.num[i][u] == 0){
+                // ‹ó”’ƒ}ƒX‚Í‹ó”’•\¦
                 printf("<td></td>\n");
-            }
-            // å‹•ã‘ãªã„å ´æ‰€ã«ã¯ãƒªãƒ³ã‚¯ã‚’è²¼ã‚‰ãªã„ã€‚
-            else if (judge(&map, i, u, 0, 0, 1)){
+            } else if (judge(&map, i, u, 0, 0, 1)){
+                // “®‚¯‚È‚¢êŠ‚É‚ÍƒŠƒ“ƒN‚ğ“\‚ç‚È‚¢B
                 printf("<td><a href='pazzle.cgi?%d?%d'><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
-            }
-            else{
+            } else {
                 printf("<td><img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
             }
         }
     }
     printf("</table>\n");
-    printf("<h2>ç¾åœ¨ã®ã‚¹ã‚³ã‚¢:%3d</h2>\n", map.count);
-    // ãƒ•ãƒƒã‚¿ã®å‡ºåŠ›
+    printf("<h2>Œ»İ‚ÌƒXƒRƒA:%3d</h2>\n", map.count);
+    // ƒtƒbƒ^‚Ìo—Í
     footer();
 }
 
 void header(void){
+    printf("Content-type: text/html; charset=shift_jis\n\n");
     printf("<!DOCTYPE html>\n");
     printf("<html>\r\n");
     printf("<meta charset=\"utf-8\">\n");
@@ -174,12 +180,12 @@ int outputdata(struct stage map){
     int i, u;
     FILE *fp;
     fp = fopen("./temp/stage.dat","w");
-    for (i=0; i<X; i++){
-        for(u=0; u<Y; u++){
+    for (i=0; i<XU; i++){
+        for(u=0; u<YU; u++){
             fprintf(fp, "%d,", map.num[i][u]);
         }
     }
-    fprintf(fp, "%d", map.count);
+    fprintf(fp, "%d,E", map.count);
     fclose(fp);
     return 0;
 }
