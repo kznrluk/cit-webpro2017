@@ -30,10 +30,7 @@ int main(int argc,char *argv[]){
     map.count = 0;
     if (argc >= 2){
         // 引数がある場合、ファイルを読み込む。
-        int mx, my;
-        mx = atoi(argv[1]);
-        my = atoi(argv[2]);
-        scdgetin(&map, mx, my);
+        scdgetin(&map, atoi(argv[1]), atoi(argv[2]));
     } else {
         // 引数がない場合、初回起動処理に移行。
         fstgetin(&map);
