@@ -97,7 +97,7 @@ void moving (struct stage *map, int x, int y){
     int i, u;
     for (i=0;i<X;i++){
         for (u=0;u<Y;u++){
-            if((*map).num[i][u] == -1 && judge(x, y, i, u, 0)){
+            if((*map).num[i][u] == -1 && judge(map, x, y, i, u, 0)){
                 (*map).num[i][u] = (*map).num[x][y];
                 (*map).num[x][y] = -1;
             }
@@ -141,7 +141,7 @@ int outputhtml (struct stage map){
                 printf("<td></td>\n");
             }
             // 動けない場所にはリンクを貼らない。
-            else if (judge(i, u, 0, 0, 1)){
+            else if (judge(&map, i, u, 0, 0, 1)){
                 printf("<td><a href='pazzle.cgi?%d?%d'><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
             }
             else{
