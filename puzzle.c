@@ -37,7 +37,7 @@ int main (int argc, char *argv[]){
     } else if (argc == 1) {
         firstentry(&map);
     } else {
-        printf("引数の値が不正です。\n");
+        printf("Arg Error.\n");
         return -1;
     }
     outputhtml(map);
@@ -141,12 +141,12 @@ void outputhtml (struct stage map){
         }
     }
     printf("</table>\n");
-    printf("<h2>現在のスコア:%3d</h2>\n", map.count);
+    printf("<h2>Score :%3d</h2>\n", map.count);
     footer();
 }
 
 void header(struct stage map){
-    printf("Content-type: text/html; charset=shift_jis\n");
+    printf("Content-type: text/html; charset=utf-8\n");
     writecookie(map);
     printf("<!DOCTYPE html>\n");
     printf("<html>\r\n");
@@ -165,7 +165,7 @@ void writecookie(struct stage map){
             printf("%d,", map.num[i][u]);
         }
     }
-    printf("%d,E; path=/;\n", map.count);
+    printf("%d,E; path=/;\n\n", map.count);
 }
 
 void footer(void){
