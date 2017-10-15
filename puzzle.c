@@ -21,7 +21,6 @@ void footer (void);
 int  outputdata (struct stage);
 
 int main (int argc, char *argv[]){
-    // 各種宣言 警告が出るので一応初期化しておく。
     int i, u;
     struct stage map;
     for(i = 0; i < XU; i++){
@@ -29,24 +28,19 @@ int main (int argc, char *argv[]){
             map.num[i][u] = 0;
         }
     }
-
     map.count = 0;
     map.sx = 0;
     map.sy = 0;
-    // 引数分岐
+
     if(argc == 3){
-        // 引数がある場合、ファイルを読み込む。
         continuation(&map, atoi(argv[1]), atoi(argv[2]));
     } else if (argc == 1) {
-        // 引数がない場合、初回起動処理に移行。
         firstentry(&map);
     } else {
         printf("引数の値が不正です。\n");
         return -1;
     }
-    // HTMLの出力
     outputhtml(map);
-    // ファイルの出力
     outputdata(map);
     return 0;
 }
@@ -54,25 +48,21 @@ int main (int argc, char *argv[]){
 void firstentry (struct stage *map){
     int mapseed[XU*YU];
     int i, u, e, j, t;
-    // まず配列に0,1,2... と格納する。
     for(i = 0; i < XU*YU; i++){
         mapseed[i] = i;
     }
-    // それをシャッフルする。
     for(i = 0; i < XU*YU; i++) {
         j = rand()%XU*YU;
         t = mapseed[i];
         mapseed[i] = mapseed[j];
         mapseed[j] = t;
     }
-    // バラバラになった数字を配列に格納する。
     for(e = 0 , i = 0; i < XU; i++){
         for(u = 0; u < YU; u++){
             map->num[i][u] = mapseed[e];
             e++;
         }
     }
-    // 右上を空白にする。
     map->num[0][0] = -1;
     map->sx = 0;
     map->sy = 0;
@@ -80,7 +70,6 @@ void firstentry (struct stage *map){
 
 int continuation (struct stage *map, int x, int y){
     int i, u;
-    // ファイルの読み込み
     FILE *fd;
     char fmap[32];
     fd = fopen("./temp/stage.dat","r");
@@ -89,7 +78,6 @@ int continuation (struct stage *map, int x, int y){
         return -1;
     }
     fgets(fmap, 32, fd);
-    // 保存した配列の内容を読み込み
     for(i = 0; i < XU; i++){
         for(u = 0; u < YU; u++){
             if (i == 0 && u == 0){
@@ -106,13 +94,11 @@ int continuation (struct stage *map, int x, int y){
     }
     map->count = atoi(strtok(NULL, ",")) + 1;
     fclose(fd);
-    // 配列を動かす。
     moving(map, x, y);
     return 0;
 }
 
 void moving (struct stage *map, int x, int y){
-    // Judgeを使用し移動処理を行う。
     if(judge(map, x, y)){
         map->num[map->sx][map->sy] = map->num[x][y];
         map->num[x][y] = -1;
@@ -131,20 +117,15 @@ int judge (struct stage *map, int x, int y){
 }
 
 void outputhtml (struct stage map){
-    // 各種宣言
     int i, u;
-    // ヘッダの出力
     header();
-    // ボディの出力
     printf("<table>\n");
     for (i = 0; i < XU; i++){
         printf("<tr>\n");
         for (u = 0; u < YU; u++){
             if (map.num[i][u] == -1){
-                // 空白マスは空白表示
                 printf("<td></td>\n");
             } else {
-                // 置ける場所にはリンクを貼る。
                 printf("<td>");
                 if (judge(&map, i, u)){
                     printf("<a href='puzzle.cgi?%d?%d'>", i, u);
@@ -155,7 +136,6 @@ void outputhtml (struct stage map){
     }
     printf("</table>\n");
     printf("<h2>現在のスコア:%3d</h2>\n", map.count);
-    // フッタの出力
     footer();
 }
 
@@ -163,7 +143,6 @@ void header(void){
     printf("Content-type: text/html; charset=shift_jis\n\n");
     printf("<!DOCTYPE html>\n");
     printf("<html>\r\n");
-    printf("<meta charset=\"utf-8\">\n");
     printf("<title>SlidePuzzle.cgi</title>\n");
     printf("<link href=\"css/bootstrap.css\" rel=\"stylesheet\">\n");
     printf("</head>\n");
@@ -176,7 +155,6 @@ void footer(void){
     printf("</html>\n");
 }
 int outputdata(struct stage map){
-    // データ出力
     int i, u;
     FILE *fp;
     fp = fopen("./temp/stage.dat","w");
