@@ -16,9 +16,9 @@ int  continuation (struct stage *map, int, int);
 void moving (struct stage *map, int, int);
 int  judge (struct stage *map, int, int);
 void outputhtml (struct stage);
-void header (void);
+void header (struct stage map);
+void writecookie(struct stage map);
 void footer (void);
-int  outputdata (struct stage);
 
 int main (int argc, char *argv[]){
     int i, u;
@@ -41,7 +41,6 @@ int main (int argc, char *argv[]){
         return -1;
     }
     outputhtml(map);
-    outputdata(map);
     return 0;
 }
 
@@ -70,6 +69,14 @@ void firstentry (struct stage *map){
 
 int continuation (struct stage *map, int x, int y){
     int i, u;
+    char *cookie;
+    int count = 0;
+
+    if((cookie = getenv("HTTP_COOKIE")) != NULL) {
+        printf("%s",cookie);
+    }
+
+
     FILE *fd;
     char fmap[32];
     fd = fopen("./temp/stage.dat","r");
@@ -85,7 +92,6 @@ int continuation (struct stage *map, int x, int y){
             } else {
                 map->num[i][u] = atoi(strtok(NULL, ","));
             }
-            // 0‚ÌˆÊ’u‚ð‹L‰¯
             if (map->num[i][u] == -1){
                 map->sx = i;
                 map->sy = u;
@@ -118,7 +124,7 @@ int judge (struct stage *map, int x, int y){
 
 void outputhtml (struct stage map){
     int i, u;
-    header();
+    header(map);
     printf("<table>\n");
     for (i = 0; i < XU; i++){
         printf("<tr>\n");
@@ -139,8 +145,9 @@ void outputhtml (struct stage map){
     footer();
 }
 
-void header(void){
-    printf("Content-type: text/html; charset=shift_jis\n\n");
+void header(struct stage map){
+    printf("Content-type: text/html; charset=shift_jis\n");
+    writecookie(map);
     printf("<!DOCTYPE html>\n");
     printf("<html>\r\n");
     printf("<title>SlidePuzzle.cgi</title>\n");
@@ -150,20 +157,18 @@ void header(void){
     printf("<h1>SlidePuzzle with CGI/C</h1><br>\n");
 }
 
+void writecookie(struct stage map){
+    int i, u;
+    printf("Set-Cookie: stage=");
+    for (i = 0; i < XU; i++){
+        for(u = 0; u < YU; u++){
+            printf("%d,", map.num[i][u]);
+        }
+    }
+    printf("%d,E; path=/;\n", map.count);
+}
+
 void footer(void){
     printf("</body>\n");
     printf("</html>\n");
-}
-int outputdata(struct stage map){
-    int i, u;
-    FILE *fp;
-    fp = fopen("./temp/stage.dat","w");
-    for (i = 0; i < XU; i++){
-        for(u = 0; u < YU; u++){
-            fprintf(fp, "%d,", map.num[i][u]);
-        }
-    }
-    fprintf(fp, "%d,E", map.count);
-    fclose(fp);
-    return 0;
 }
