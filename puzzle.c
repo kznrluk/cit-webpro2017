@@ -14,7 +14,7 @@ struct stage{
 void fstgetin (struct stage *map);
 int scdgetin (struct stage *map, int, int);
 void moving (struct stage *map, int, int);
-int judge (struct stage *map, int, int, int, int, int);
+int judge (struct stage *map, int, int);
 void outputhtml(struct stage);
 void header(void);
 void footer(void);
@@ -113,6 +113,8 @@ void moving (struct stage *map, int x, int y){
     if(map->num[i][u] == 0 && judge(map, x, y)){
         map->num[i][u] = map->num[x][y];
         map->num[x][y] = 0;
+        map->sx = i;
+        map->sy = u;
     }
 }
 
@@ -133,16 +135,17 @@ void outputhtml (struct stage map){
     // ボディの出力
     printf("<table>\n");
     for (i=0; i<XU; i++){
-        printf("<tr>\n");
+        printf("<tr>\n<td>\n");
         for (u=0; u<YU; u++){
             if (map.num[i][u] == 0){
                 // 空白マスは空白表示
                 printf("<td></td>\n");
-            } else if (judge(&map, i, u, 0, 0, 1)){
-                // 動けない場所にはリンクを貼らない。
-                printf("<td><a href='puzzle.cgi?%d?%d'><img src='./temp/slide-%d.png'></td>\n", i, u, map.num[i][u]);
             } else {
-                printf("<td><img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
+                // 置ける場所にはリンクを貼る。
+                if (judge(&map, i, u)){
+                    printf("<a href='puzzle.cgi?%d?%d'>", i, u,)
+                }
+                printf("<img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
             }
         }
     }
