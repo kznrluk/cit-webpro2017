@@ -11,35 +11,36 @@ struct stage{
     int count;
 };
 
-void fstgetin (struct stage *map);
-int scdgetin (struct stage *map, int, int);
+void firstentry (struct stage *map);
+int  continuation (struct stage *map, int, int);
 void moving (struct stage *map, int, int);
-int judge (struct stage *map, int, int);
-void outputhtml(struct stage);
-void header(void);
-void footer(void);
-int outputdata(struct stage);
+int  judge (struct stage *map, int, int);
+void outputhtml (struct stage);
+void header (void);
+void footer (void);
+int  outputdata (struct stage);
 
-int main(int argc,char *argv[]){
+int main (int argc, char *argv[]){
     // 各種宣言 警告が出るので一応初期化しておく。
     int i, u;
     struct stage map;
-    for(i=0; i<XU; i++){
-        for(u=0; u<YU; u++){
+    for(i = 0; i < XU; i++){
+        for(u = 0; u < YU; u++){
             map.num[i][u] = 0;
         }
     }
+
     map.count = 0;
     map.sx = 0;
     map.sy = 0;
     // 引数分岐
-    if (argc >= 2){
+    if(argc == 3){
         // 引数がある場合、ファイルを読み込む。
-        scdgetin(&map, atoi(argv[1]), atoi(argv[2]));
-    } else {
+        continuation(&map, atoi(argv[1]), atoi(argv[2]));
+    } else if (argc == 1) {
         // 引数がない場合、初回起動処理に移行。
-        fstgetin(&map);
-    }
+        firstentry(&map);
+    } 
     // HTMLの出力
     outputhtml(map);
     // ファイルの出力
@@ -47,34 +48,34 @@ int main(int argc,char *argv[]){
     return 0;
 }
 
-void fstgetin (struct stage *map){
+void firstentry (struct stage *map){
     int mapseed[XU*YU];
-    int i, u, e, j , t;
+    int i, u, e, j, t;
     // まず配列に0,1,2... と格納する。
-    for (i=1; i < XU*YU; i++){
+    for(i = 0; i < XU*YU; i++){
         mapseed[i] = i;
     }
     // それをシャッフルする。
-    for(i=0; i < XU*YU; i++) {
+    for(i = 0; i < XU*YU; i++) {
         j = rand()%XU*YU;
         t = mapseed[i];
         mapseed[i] = mapseed[j];
         mapseed[j] = t;
     }
     // バラバラになった数字を配列に格納する。
-    for(e=0, i=0; i<XU; i++){
-        for(u=0; u<YU; u++){
+    for(e = 0 , i = 0; i < XU; i++){
+        for(u = 0; u < YU; u++){
             map->num[i][u] = mapseed[e];
             e++;
         }
     }
     // 右上を空白にする。
-    map->num[0][0] = 0;
+    map->num[0][0] = -1;
     map->sx = 0;
     map->sy = 0;
 }
 
-int scdgetin (struct stage *map, int x, int y){
+int continuation (struct stage *map, int x, int y){
     int i, u;
     // ファイルの読み込み
     FILE *fd;
@@ -86,17 +87,15 @@ int scdgetin (struct stage *map, int x, int y){
     }
     fgets(fmap, 32, fd);
     // 保存した配列の内容を読み込み
-    for(i=0; i<XU; i++){
-        for(u=0; u<YU; u++){
-            if (i==0 && u ==0){
+    for(i = 0; i < XU; i++){
+        for(u = 0; u < YU; u++){
+            if (i == 0 && u == 0){
                 map->num[0][0] = atoi(strtok(fmap, ","));
-                printf("%d",map->num[0][0]);
             } else {
                 map->num[i][u] = atoi(strtok(NULL, ","));
-                printf("%d",map->num[i][u]);
             }
             // 0の位置を記憶
-            if (map->num[i][u] == 0){
+            if (map->num[i][u] == -1){
                 map->sx = i;
                 map->sy = u;
             }
@@ -104,17 +103,18 @@ int scdgetin (struct stage *map, int x, int y){
     }
     map->count = atoi(strtok(NULL, ",")) + 1;
     fclose(fd);
-    // 配列を動かす
+    // 配列を動かす。
     moving(map, x, y);
     return 0;
 }
 
 void moving (struct stage *map, int x, int y){
-    if(map->num[i][u] == 0 && judge(map, x, y)){
-        map->num[i][u] = map->num[x][y];
-        map->num[x][y] = 0;
-        map->sx = i;
-        map->sy = u;
+    // Judgeを使用し移動処理を行う。
+    if(judge(map, x, y)){
+        map->num[map->sx][map->sy] = map->num[x][y];
+        map->num[x][y] = -1;
+        map->sx = x;
+        map->sy = y;
     }
 }
 
@@ -134,16 +134,17 @@ void outputhtml (struct stage map){
     header();
     // ボディの出力
     printf("<table>\n");
-    for (i=0; i<XU; i++){
-        printf("<tr>\n<td>\n");
-        for (u=0; u<YU; u++){
-            if (map.num[i][u] == 0){
+    for (i = 0; i < XU; i++){
+        printf("<tr>\n");
+        for (u = 0; u < YU; u++){
+            if (map.num[i][u] == -1){
                 // 空白マスは空白表示
                 printf("<td></td>\n");
             } else {
                 // 置ける場所にはリンクを貼る。
+                printf("<td>");
                 if (judge(&map, i, u)){
-                    printf("<a href='puzzle.cgi?%d?%d'>", i, u,)
+                    printf("<a href='puzzle.cgi?%d?%d'>", i, u);
                 }
                 printf("<img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
             }
@@ -176,8 +177,8 @@ int outputdata(struct stage map){
     int i, u;
     FILE *fp;
     fp = fopen("./temp/stage.dat","w");
-    for (i=0; i<XU; i++){
-        for(u=0; u<YU; u++){
+    for (i = 0; i < XU; i++){
+        for(u = 0; u < YU; u++){
             fprintf(fp, "%d,", map.num[i][u]);
         }
     }
