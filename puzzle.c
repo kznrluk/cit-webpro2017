@@ -40,7 +40,10 @@ int main (int argc, char *argv[]){
     } else if (argc == 1) {
         // 引数がない場合、初回起動処理に移行。
         firstentry(&map);
-    } 
+    } else {
+        printf("引数の値が不正です。\n");
+        return -1;
+    }
     // HTMLの出力
     outputhtml(map);
     // ファイルの出力
