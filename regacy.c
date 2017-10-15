@@ -37,7 +37,7 @@ int main (int argc, char *argv[]){
     } else if (argc == 1) {
         firstentry(&map);
     } else {
-        printf("引数の値が不正です。\n");
+        printf("Argument error.\n");
         return -1;
     }
     outputhtml(map);
@@ -127,19 +127,19 @@ void outputhtml (struct stage map){
             } else {
                 printf("<td>");
                 if (judge(&map, i, u)){
-                    printf("<a href='puzzle.cgi?%d?%d'>", i, u);
+                    printf("<a href='puzzle.cgi?%d+%d'>", i, u);
                 }
                 printf("<img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
             }
         }
     }
     printf("</table>\n");
-    printf("<h2>現在のスコア:%3d</h2>\n", map.count);
+    printf("<h2>Score :%3d</h2>\n", map.count);
     footer();
 }
 
 void header(void){
-    printf("Content-type: text/html; charset=shift_jis\n\n");
+    printf("Content-type: text/html; charset=utf-8\n\n");
     printf("<!DOCTYPE html>\n");
     printf("<html>\r\n");
     printf("<title>SlidePuzzle.cgi</title>\n");
@@ -157,6 +157,10 @@ int outputdata(struct stage map){
     int i, u;
     FILE *fp;
     fp = fopen("./temp/stage.dat","w");
+    if(fp == NULL) {
+        printf("Can not read file. Is permission okay?");
+        return -1;
+    }
     for (i = 0; i < XU; i++){
         for(u = 0; u < YU; u++){
             fprintf(fp, "%d,", map.num[i][u]);
