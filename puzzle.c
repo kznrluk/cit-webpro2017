@@ -134,7 +134,7 @@ void outputhtml (struct stage map){
             } else {
                 printf("<td>");
                 if (judge(&map, i, u)){
-                    printf("<a href='puzzle.cgi?%d?%d'>", i, u);
+                    printf("<a href='puzzle.cgi?%d+%d'>", i, u);
                 }
                 printf("<img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
             }
