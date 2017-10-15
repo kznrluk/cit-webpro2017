@@ -6,6 +6,8 @@
 
 struct stage{
     int num[XU][YU];
+    int sx;
+    int sy;
     int count;
 };
 
@@ -28,6 +30,9 @@ int main(int argc,char *argv[]){
         }
     }
     map.count = 0;
+    map.sx = 0;
+    map.sy = 0;
+    // 引数分岐
     if (argc >= 2){
         // 引数がある場合、ファイルを読み込む。
         scdgetin(&map, atoi(argv[1]), atoi(argv[2]));
@@ -65,6 +70,8 @@ void fstgetin (struct stage *map){
     }
     // 右上を空白にする。
     map->num[0][0] = 0;
+    map->sx = 0;
+    map->sy = 0;
 }
 
 int scdgetin (struct stage *map, int x, int y){
@@ -88,6 +95,11 @@ int scdgetin (struct stage *map, int x, int y){
                 map->num[i][u] = atoi(strtok(NULL, ","));
                 printf("%d",map->num[i][u]);
             }
+            // 0の位置を記憶
+            if (map->num[i][u] == 0){
+                map->sx = i;
+                map->sy = u;
+            }
         }
     }
     map->count = atoi(strtok(NULL, ",")) + 1;
@@ -97,33 +109,16 @@ int scdgetin (struct stage *map, int x, int y){
     return 0;
 }
 
-// 説明しよう！この関数は実行されると同時に指定された場所に隣接する空白に値を書き込む関数だ！
 void moving (struct stage *map, int x, int y){
-    int i, u;
-    for (i=0;i<XU;i++){
-        for (u=0;u<YU;u++){
-            if(map->num[i][u] == 0 && judge(map, x, y, i, u, 0)){
-                map->num[i][u] = map->num[x][y];
-                map->num[x][y] = 0;
-            }
-        }
+    if(map->num[i][u] == 0 && judge(map, x, y)){
+        map->num[i][u] = map->num[x][y];
+        map->num[x][y] = 0;
     }
 }
 
-// ココらへんの書き方下手くそ
-int judge (struct stage *map, int x, int y, int i, int u, int getspace){
-    if(getspace){
-        int n, c;
-        for (n=0;n<XU;n++){
-            for (c=0;c<YU;c++){
-                if(map->num[n][c] == 0){
-                    i = n;
-                    u = c;
-                }
-            }
-        }
-    }
-    if((x == i && y == u - 1) || (x == i && y == u + 1) || (y == u && x == i + 1) || (y == u && x == i - 1)){
+int judge (struct stage *map, int x, int y){
+    if ((x == map->sx && y == map->sy - 1) || (x == map->sx && y == map->sy + 1)
+     || (y == map->sy && x == map->sx + 1) || (y == map->sy && x == map->sx - 1)){
         return 1;
     } else {
         return 0;
