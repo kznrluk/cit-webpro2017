@@ -82,7 +82,6 @@ int continuation (struct stage *map, int x, int y){
         printf("%s",cookie);
     }
 
-
     FILE *fd;
     char fmap[32];
     fd = fopen("./temp/stage.dat","r");
