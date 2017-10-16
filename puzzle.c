@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #define XU 3
 #define YU 3
 
@@ -52,6 +53,7 @@ int main (int argc, char *argv[]){
 void firstentry (struct stage *map){
     int mapseed[XU*YU];
     int i, u, e, j, t;
+    srand((unsigned) time(NULL));
     for(i = 0; i < XU*YU; i++){
         mapseed[i] = i;
     }
@@ -75,7 +77,6 @@ void firstentry (struct stage *map){
 int continuation (struct stage *map, int x, int y){
     int i, u;
     char *cookie;
-    int count = 0;
 
     if((cookie = getenv("HTTP_COOKIE")) != NULL) {
         printf("%s",cookie);
@@ -139,7 +140,7 @@ void outputhtml (struct stage map){
                 printf("<td></td>\n");
             } else {
                 printf("<td>");
-                if (judge(&map, i, u)){
+                if (judge(&map, i, u) && map.clear == 0){
                     printf("<a href='puzzle.cgi?%d+%d'>", i, u);
                 }
                 printf("<img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
