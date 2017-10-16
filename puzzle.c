@@ -21,7 +21,7 @@ int  ifclear (struct stage);
 int  outputdata (struct stage);
 void header (struct stage map);
 void writecookie (struct stage map);
-void footer (void);
+void footer (struct stage map);
 
 int main (int argc, char *argv[]){
     int i, u;
@@ -131,10 +131,7 @@ int judge (struct stage *map, int x, int y){
 void outputhtml (struct stage map){
     int i, u;
     header(map);
-    if (map.clear){
-        printf("<h1>CLEAR!!!!!</h1>");
-    }
-    printf("<table>\n");
+    printf("<table class=\"mx-auto\">\n");
     for (i = 0; i < XU; i++){
         printf("<tr>\n");
         for (u = 0; u < YU; u++){
@@ -150,8 +147,7 @@ void outputhtml (struct stage map){
         }
     }
     printf("</table>\n");
-    printf("<h2>Score :%3d</h2>\n", map.count);
-    footer();
+    footer(map);
 }
 
 int ifclear(struct stage map){
@@ -176,13 +172,42 @@ int ifclear(struct stage map){
 void header(struct stage map){
     printf("Content-type: text/html; charset=utf-8\n\n");
     // writecookie(map);
-    printf("<!DOCTYPE html>\n");
-    printf("<html>\r\n");
-    printf("<title>SlidePuzzle.cgi</title>\n");
-    printf("<link href=\"css/bootstrap.css\" rel=\"stylesheet\">\n");
-    printf("</head>\n");
-    printf("<body>\n");
-    printf("<h1>SlidePuzzle with CGI/C</h1><br>\n");
+printf("<!DOCTYPE html>\n\
+<html>\n\
+<head>\n\
+    <title>🍫Chocolate Puzzle🍫</title>\n\
+    <link href=\"css/bootstrap.min.css\" rel=\"stylesheet\">\n\
+    <link href=\"css/chocolate.css\" rel=\"stylesheet\">\n\
+    <link href=\"https://fonts.googleapis.com/css?family=Modak|Titillium+Web\" rel=\"stylesheet\">\n");
+    if(map.clear){
+        printf("\
+    <SCRIPT language=\"JavaScript\">\n\
+    <!--\n\
+    function jumpPage() {\n\
+        location.href = \"#clear\";\n\
+    }\n\
+    setTimeout(\"jumpPage()\",10)\n\
+    //-->\n\
+    </SCRIPT>\n");
+    }
+printf("</head>\n");
+printf("<body>\n\
+    <div id=\"contents\">\n\
+    <h1 class=\"text-center title\">🍫Chocolate Puzzle🍫</h1><br>\n\
+    <div id=\"modal\">\n\
+        <div id=\"clear\">\n\
+            <a href=\"#\" class=\"close_overlay\">×</a>\n\
+            <div class=\"modal_window\">\n\
+                <h2 class=\"type-shine\">Congratulation!</h2>\n\
+                <p class=\"scores\">Your Score : %d</p>\n\
+                <a class=\"twitter-share-button\"\n\
+                    href=\"https://twitter.com/intent/tweet?text=txt\"\n\
+                    data-size=\"large\">Tweet\n\
+                </a>\n\
+            </div>\n\
+        </div>\n\
+    </div>\n\
+    <div class=\"jumbotron\">\n", map.count);
 }
 
 void writecookie(struct stage map){
@@ -196,9 +221,27 @@ void writecookie(struct stage map){
     printf("%d,E; path=/;\n\n", map.count);
 }
 
-void footer(void){
-    printf("</body>\n");
-    printf("</html>\n");
+void footer(struct stage map){
+printf("\
+        <div class=\"container\">\n\
+            <div class=\"row\">\n\
+                <div class=\"col-md-3 mx-auto text-center\">\n\
+                    <p class=\"score\">Score : %d</p>\n\
+                </div>\n\
+                <div class=\"col-md-3 mx-auto text-center\">\n\
+                    <a href=\"./puzzle.cgi\"><button type=\"button\" class=\"btn btn-outline-success button\">Reset</button></a>\n\
+                </div>\n\
+            </div>\n\
+        </div>\n\
+    </div>\n\
+    <footer class=\"footer\">\n\
+        <div class=\"container\">\n\
+            <p class=\"footertext\">SlidePuzzle created by K. Sasa.</p>\n\
+        </div>\n\
+    </footer>\n\
+    </div>\n\
+</body>\n\
+</html>\n", map.count);
 }
 
 int outputdata(struct stage map){
