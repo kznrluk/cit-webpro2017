@@ -16,6 +16,7 @@ int  continuation (struct stage *map, int, int);
 void moving (struct stage *map, int, int);
 int  judge (struct stage *map, int, int);
 void outputhtml (struct stage);
+int  outputdata (struct stage);
 void header (struct stage map);
 void writecookie(struct stage map);
 void footer (void);
@@ -41,6 +42,7 @@ int main (int argc, char *argv[]){
         return -1;
     }
     outputhtml(map);
+    outputdata(map);
     return 0;
 }
 
@@ -171,4 +173,18 @@ void writecookie(struct stage map){
 void footer(void){
     printf("</body>\n");
     printf("</html>\n");
+}
+
+int outputdata(struct stage map){
+    int i, u;
+    FILE *fp;
+    fp = fopen("./temp/stage.dat","w");
+    for (i = 0; i < XU; i++){
+        for(u = 0; u < YU; u++){
+            fprintf(fp, "%d,", map.num[i][u]);
+        }
+    }
+    fprintf(fp, "%d,E", map.count);
+    fclose(fp);
+    return 0;
 }
