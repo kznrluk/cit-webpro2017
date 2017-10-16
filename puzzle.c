@@ -9,6 +9,7 @@ struct stage{
     int sx;
     int sy;
     int count;
+    int clear;
 };
 
 void firstentry (struct stage *map);
@@ -16,9 +17,10 @@ int  continuation (struct stage *map, int, int);
 void moving (struct stage *map, int, int);
 int  judge (struct stage *map, int, int);
 void outputhtml (struct stage);
+int  ifclear (struct stage);
 int  outputdata (struct stage);
 void header (struct stage map);
-void writecookie(struct stage map);
+void writecookie (struct stage map);
 void footer (void);
 
 int main (int argc, char *argv[]){
@@ -32,6 +34,7 @@ int main (int argc, char *argv[]){
     map.count = 0;
     map.sx = 0;
     map.sy = 0;
+    map.clear = 0;
 
     if(argc == 3){
         continuation(&map, atoi(argv[1]), atoi(argv[2]));
@@ -103,6 +106,7 @@ int continuation (struct stage *map, int x, int y){
     map->count = atoi(strtok(NULL, ",")) + 1;
     fclose(fd);
     moving(map, x, y);
+    map->clear = ifclear(*map);
     return 0;
 }
 
@@ -127,6 +131,9 @@ int judge (struct stage *map, int x, int y){
 void outputhtml (struct stage map){
     int i, u;
     header(map);
+    if (map.clear){
+        printf("<h1>CLEAR!!!!!</h1>");
+    }
     printf("<table>\n");
     for (i = 0; i < XU; i++){
         printf("<tr>\n");
@@ -147,9 +154,28 @@ void outputhtml (struct stage map){
     footer();
 }
 
+int ifclear(struct stage map){
+    int i, u;
+    int count = 0;
+    int s = 0;
+    for(i = 0; i < XU; i++){
+        for(u = 0; u < YU; u++){
+            if(map.num[i][u] == count){
+                s++;
+            }
+            count++;
+        }
+    }
+    if (s == XU*YU - 1){
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 void header(struct stage map){
-    printf("Content-type: text/html; charset=utf-8\n");
-    writecookie(map);
+    printf("Content-type: text/html; charset=utf-8\n\n");
+    // writecookie(map);
     printf("<!DOCTYPE html>\n");
     printf("<html>\r\n");
     printf("<title>SlidePuzzle.cgi</title>\n");
