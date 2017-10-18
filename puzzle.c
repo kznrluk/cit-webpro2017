@@ -177,8 +177,8 @@ int ifclear(struct stage map){
 }
 
 void header(struct stage map){
+    printf("Content-Type: text/html; charset=utf-8;\n");
     writecookie(map);
-    printf("Content-Type: text/html; charset=utf-8;\n\n");
 printf("<!DOCTYPE html>\n\
 <html>\n\
 <head>\n\
@@ -229,7 +229,7 @@ void writecookie(struct stage map){
     printf("Set-Cookie: difficulty=1; \n");
     printf("Set-Cookie: prof=%s; \n",map.user);
     //printf("Set-Cookie: path=/\n");
-    //printf("\n");
+    printf("\n");
 }
 
 void readcookie(struct stage map){
