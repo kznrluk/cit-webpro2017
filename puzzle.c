@@ -225,9 +225,9 @@ void writecookie(struct stage map){
             printf("%d,", map.num[i][u]);
         }
     }
-    printf("%d,E;\n", map.count);
-    printf("Set-Cookie: difficulty=1;\n");
-    printf("Set-Cookie: prof=%s;\n",map.user);
+    printf("%d,E; \n", map.count);
+    printf("Set-Cookie: difficulty=1; \n");
+    printf("Set-Cookie: prof=%s; \n",map.user);
     //printf("Set-Cookie: path=/\n");
     //printf("\n");
 }
