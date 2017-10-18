@@ -14,6 +14,7 @@ struct stage{
     int sy;
     int count;
     int clear;
+    char user[124];
 };
 
 void firstentry (struct stage *map);
@@ -32,7 +33,6 @@ int main (int argc, char *argv[]){
     XU = 3;
     YU = 3;
     struct stage map;
-
     for(i = 0; i < XU; i++){
         for(u = 0; u < YU; u++){
             map.num[i][u] = 0;
@@ -42,6 +42,7 @@ int main (int argc, char *argv[]){
     map.sx = 0;
     map.sy = 0;
     map.clear = 0;
+    strncpy(map.user, "kznr_luk", 120);
 
     if(argc == 3){
         continuation(&map, atoi(argv[1]), atoi(argv[2]));
@@ -176,8 +177,8 @@ int ifclear(struct stage map){
 }
 
 void header(struct stage map){
-    printf("Content-type: text/html; charset=utf-8\n\n");
-    // writecookie(map);
+    printf("Content-type: text/html; charset=utf-8\n");
+    writecookie(map);
 printf("<!DOCTYPE html>\n\
 <html>\n\
 <head>\n\
@@ -224,7 +225,11 @@ void writecookie(struct stage map){
             printf("%d,", map.num[i][u]);
         }
     }
-    printf("%d,E; path=/;\n\n", map.count);
+    printf("%d,E; path=/;prof=%s;difficulty=normal;\n\n", map.count, map.user);
+}
+
+void readcookie(struct stage map){
+
 }
 
 void footer(struct stage map){
