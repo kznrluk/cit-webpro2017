@@ -219,16 +219,16 @@ printf("<body>\n\
 
 void writecookie(struct stage map){
     int i, u;
-    printf("Set-Cookie:stage=");
+    printf("Set-Cookie: stage=");
     for (i = 0; i < XU; i++){
         for(u = 0; u < YU; u++){
             printf("%d,", map.num[i][u]);
         }
     }
     printf("%d,E;\n", map.count);
-    printf("Set-Cookie:difficulty=1;\n");
-    printf("Set-Cookie:prof=%s;\n",map.user);
-    printf("Set-Cookie:path=/;\n");
+    printf("Set-Cookie: difficulty=1;\n");
+    printf("Set-Cookie: prof=%s;\n",map.user);
+    printf("Set-Cookie: path=/;\n");
     printf("\n");
 }
 
