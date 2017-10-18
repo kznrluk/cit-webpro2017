@@ -177,8 +177,8 @@ int ifclear(struct stage map){
 }
 
 void header(struct stage map){
-    printf("Content-Type: text/html; charset=utf-8;\n\n");
     writecookie(map);
+    printf("Content-Type: text/html; charset=utf-8;\n");
 printf("<!DOCTYPE html>\n\
 <html>\n\
 <head>\n\
