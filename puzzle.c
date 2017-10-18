@@ -26,6 +26,7 @@ int  ifclear (struct stage);
 int  outputdata (struct stage);
 void header (struct stage map);
 void writecookie (struct stage map);
+void readcookie(struct stage map);
 void footer (struct stage map);
 
 int main (int argc, char *argv[]){
@@ -177,7 +178,7 @@ int ifclear(struct stage map){
 }
 
 void header(struct stage map){
-    printf("Content-Type: text/html;\n");
+    printf("Content-Type: text/html charset=utf-8;\n");
     //writecookie(map);
     printf("\n");
 printf("<!DOCTYPE html>\n\
@@ -233,7 +234,10 @@ void writecookie(struct stage map){
 }
 
 void readcookie(struct stage map){
-
+    if((cookie = getenv("HTTP_COOKIE")) != NULL) {
+        temp = strtok(cookie, "= ");
+        printf("%s",temp)
+    }
 }
 
 void footer(struct stage map){
