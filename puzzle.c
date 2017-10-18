@@ -2,11 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#define XU 3
-#define YU 3
+#define MAXGAMESIZEX 10
+#define MAXGAMESIZEY 10
+
+int XU;
+int YU;
 
 struct stage{
-    int num[XU][YU];
+    int num[MAXGAMESIZEX][MAXGAMESIZEY];
     int sx;
     int sy;
     int count;
@@ -26,7 +29,10 @@ void footer (struct stage map);
 
 int main (int argc, char *argv[]){
     int i, u;
+    XU = 3;
+    YU = 3;
     struct stage map;
+
     for(i = 0; i < XU; i++){
         for(u = 0; u < YU; u++){
             map.num[i][u] = 0;
