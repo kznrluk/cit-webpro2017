@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/kznrluk/cit-webapp/issues"
   },
-  "homepage": "https://github.com/kznrluk/cit-webapp#readme"
+  "homepage": "https://github.com/kznrluk/cit-webapp#readme",
+  "dependencies": {
+    "iconv-lite": "^0.4.19"
+  }
 }
