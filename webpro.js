@@ -1,6 +1,6 @@
 // WebPro.js
 var convertpass = 'magick';
-var cgipass = './puzzle.exe'
+var cgipass = 'puzzle.exe'
 var http   = require('http');
 var server = http.createServer();
 var fs     = require('fs');
@@ -111,7 +111,6 @@ function response(req, res) {
                                 } else {
                                     console.log('Convert: File converted ' + './slices/'+POST.id+'.png');
                                 }
-                            },function(){
                                 im.convert(['./slices/'+POST.id+'/original.png', '-crop', '200x200', './slices/'+POST.id+'/slide.png'], 
                                     function(err){
                                         if (err != null){
