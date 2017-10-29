@@ -92,7 +92,7 @@ function response(req, res) {
                         return 1;
                     }
                     console.log('File-Type:' + filetype);
-                    var readstream = fs.createReadStream('./temp/profileimage.data')
+                    var readstream = fs.createReadStream('./images/profileimagetemp.data')
                         .pipe(fs.createWriteStream('./images/'+POST.id+'.'+imgtype));
                     console.log('Copying: ' + './images/'+POST.id+'.'+imgtype);
                     readstream.on('finish',function(){
@@ -123,7 +123,7 @@ function response(req, res) {
                             }
                         );
                     });
-                }).pipe(fs.createWriteStream('./temp/profileimage.data'));
+                }).pipe(fs.createWriteStream('./images/profileimagetemp.data'));
             }
         });
     }
