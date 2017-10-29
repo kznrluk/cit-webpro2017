@@ -1,6 +1,6 @@
 // WebPro.js
 var convertpass = 'magick';
-
+var cgipass = './puzzle.exe'
 var http   = require('http');
 var server = http.createServer();
 var fs     = require('fs');
@@ -8,6 +8,7 @@ var exec   = require('child_process').exec;
 var im     = require('imagemagick');
 im.convert.path = convertpass;
 console.log('Set Convert Pass -> \'' + im.convert.path + '\'');
+console.log('Set CGI Pass -> \'' + im.convert.path + '\'');
 var qs     = require('querystring');
 
 var request = require('request');
@@ -23,7 +24,7 @@ function response(req, res) {
         var args = req.url.split(/\+|\?/);
         console.log(args);
         if (args.length == 1){
-            exec('puzzle', function(error, stdout) {
+            exec(cgipass, function(error, stdout) {
                 if (error != null) {
                     console.log(error);
                 }
@@ -33,7 +34,7 @@ function response(req, res) {
                 res.end();
             });
         } else {
-            exec('puzzle ' + args[1] +' '+ args[2], function(error, stdout) {
+            exec(cgipass + ' ' + args[1] +' '+ args[2], function(error, stdout) {
                 if (error != null) {
                     console.log(error);
                 }
