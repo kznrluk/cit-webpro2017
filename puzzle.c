@@ -233,13 +233,6 @@ void writecookie(struct stage map){
     //printf("Set-Cookie: path=/\n");
 }
 
-void readcookie(struct stage map){
-    if((cookie = getenv("HTTP_COOKIE")) != NULL) {
-        temp = strtok(cookie, "= ");
-        printf("%s",temp)
-    }
-}
-
 void footer(struct stage map){
 printf("\
         <div class=\"container\">\n\
