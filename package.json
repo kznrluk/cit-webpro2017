@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/kznrluk/cit-webapp#readme",
   "dependencies": {
-    "iconv-lite": "^0.4.19"
+    "iconv-lite": "^0.4.19",
+    "request": "^2.83.0"
   }
 }
