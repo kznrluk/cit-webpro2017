@@ -69,7 +69,7 @@ function response(req, res) {
         req.on('end',function(){
             var POST = qs.parse(body);
             if(Object.keys(POST).length != 1){
-                console.log('Warn : 与えられた値が不正です。');
+                console.log('Warn : Arg Error');
             } else {
                 console.log('Posted :' + POST.id);
                 var url = 'http://furyu.nazo.cc/twicon/' + POST.id + '/original';
@@ -113,12 +113,12 @@ function response(req, res) {
                                     console.log('Convert: File converted ' + './slices/'+POST.id+'.png');
                                 }
                             },function(){
-                                im.convert(['./slices/'+POST.id+'/original.png', '-crop', '200x200', './slices/'+POST.id+'/slide.webp'], 
+                                im.convert(['./slices/'+POST.id+'/original.png', '-crop', '200x200', './slices/'+POST.id+'/slide.png'], 
                                     function(err){
                                         if (err != null){
                                             console.log('Convert: ' + err);
                                         } else {
-                                            console.log('Convert: File sliced ' + './images/'+POST.id+'-*.webp');
+                                            console.log('Convert: File sliced ' + './images/'+POST.id+'-*.png');
                                         }
                                     }
                                 );
@@ -134,7 +134,7 @@ function response(req, res) {
 
     if(req.url == '/'){
         fs.readFile('./index.html', 'utf-8', responseIndex);
-    } else if(req.url.indexOf('puzzle') != -1) {
+    } else if(req.url.indexOf('puzzle.cgi') != -1) {
         execpuzzle();
     } else if(req.url.indexOf('.css') != -1) {
         fs.readFile('.'+req.url, 'utf-8', responseCSS);
