@@ -29,6 +29,7 @@ void writecookie (struct stage map);
 void readcookie(struct stage map);
 void footer (struct stage map);
 
+
 int main (int argc, char *argv[]){
     int i, u;
     XU = 3;
@@ -43,7 +44,8 @@ int main (int argc, char *argv[]){
     map.sx = 0;
     map.sy = 0;
     map.clear = 0;
-    strncpy(map.user, "kznr_luk", 120);
+    strcpy(map.user,"kznr_luk");
+    
 
     if(argc == 3){
         continuation(&map, atoi(argv[1]), atoi(argv[2]));
@@ -92,7 +94,11 @@ int continuation (struct stage *map, int x, int y){
 
     FILE *fd;
     char fmap[32];
-    fd = fopen("./temp/stage.dat","r");
+    char pass[64];
+
+    sprintf(pass,"./slices/%s/stage.dat",map->user);
+
+    fd = fopen(pass,"r");
     if(fd == NULL) {
         printf("File Pointer is NULL");
         return -1;
@@ -150,7 +156,7 @@ void outputhtml (struct stage map){
                 if (judge(&map, i, u) && map.clear == 0){
                     printf("<a href='puzzle.cgi?%d+%d'>", i, u);
                 }
-                printf("<img src='./temp/slide-%d.png'></td>\n", map.num[i][u]);
+                printf("<img src='./slices/%s/slide-%d.png'></td>\n", map.user, map.num[i][u]);
             }
         }
     }
@@ -205,7 +211,7 @@ printf("<body>\n\
     <h1 class=\"text-center title\">🍫Chocolate Puzzle🍫</h1><br>\n\
     <div id=\"modal\">\n\
         <div id=\"clear\">\n\
-            <a href=\"#\" class=\"close_overlay\">×</a>\n\
+            <a href=\"#\" class=\"close_overlay\">x</a>\n\
             <div class=\"modal_window\">\n\
                 <h2 class=\"type-shine\">Congratulation!</h2>\n\
                 <p class=\"scores\">Your Score : %d</p>\n\
@@ -217,20 +223,6 @@ printf("<body>\n\
         </div>\n\
     </div>\n\
     <div class=\"jumbotron\">\n", map.count);
-}
-
-void writecookie(struct stage map){
-    int i, u;
-    printf("Set-Cookie: stage=");
-    for (i = 0; i < XU; i++){
-        for(u = 0; u < YU; u++){
-            printf("%d,", map.num[i][u]);
-        }
-    }
-    printf("%d,E; \n", map.count);
-    printf("Set-Cookie: difficulty=1; \n");
-    printf("Set-Cookie: prof=%s; \n",map.user);
-    //printf("Set-Cookie: path=/\n");
 }
 
 void footer(struct stage map){
@@ -258,8 +250,10 @@ printf("\
 
 int outputdata(struct stage map){
     int i, u;
+    char pass[64];
     FILE *fp;
-    fp = fopen("./temp/stage.dat","w");
+    sprintf(pass,"./slices/%s/stage.dat",map.user);
+    fp = fopen(pass,"w");
     for (i = 0; i < XU; i++){
         for(u = 0; u < YU; u++){
             fprintf(fp, "%d,", map.num[i][u]);
