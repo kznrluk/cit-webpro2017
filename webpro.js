@@ -1,3 +1,20 @@
+// WebPro.js
+var convertpass = 'magick';
+
+var http   = require('http');
+var server = http.createServer();
+var fs     = require('fs');
+var exec   = require('child_process').exec;
+var im     = require('imagemagick');
+im.convert.path = convertpass;
+console.log('Set Convert Pass -> \'' + im.convert.path + '\'');
+
+var iconv  = require('iconv-lite');
+var qs     = require('querystring');
+
+var request = require('request');
+
+
 function response(req, res) {
     function responseIndex(err, html){
         res.writeHead(200, {'Content-Type': 'text/html'});
@@ -5,15 +22,29 @@ function response(req, res) {
         res.end();
     }
     function execpuzzle(){
-        exec('puzzle', function(error, stdout, stderr) {
-            if (error != null) {
-                console.log(error);
-            }
-            console.log('Exec puzzle.exe');
-            res.writeHead(200,  {'Content-Type': 'text/html'});
-            res.write(stdout);
-            res.end();
-        });
+        var args = req.url.split(/\+|\?/);
+        console.log(args);
+        if (args.length == 1){
+            exec('puzzle.exe', function(error, stdout, stderr) {
+                if (error != null) {
+                    console.log(error);
+                }
+                console.log('Exec puzzle.exe');
+                res.writeHead(200,  {'Content-Type': 'text/html'});
+                res.write(stdout);
+                res.end();
+            });
+        } else {
+            exec('puzzle.exe ' + args[1] +' '+ args[2], function(error, stdout, stderr) {
+                if (error != null) {
+                    console.log(error);
+                }
+                console.log('Exec puzzle.exe');
+                res.writeHead(200,  {'Content-Type': 'text/html'});
+                res.write(stdout);
+                res.end();
+            });
+        }
     }
     function responseCSS(err, css){
         res.writeHead(200, {'Content-Type': 'text/css'});
@@ -25,6 +56,11 @@ function response(req, res) {
         res.write(png);
         res.end();
     }
+    function responseWEBP(err, webp){
+        res.writeHead(200, {'Content-Type': 'image/webp'});
+        res.write(webp);
+        res.end();
+    }
     function readUserMsg(){
         var body='';
         req.on('data', function (data) {
@@ -33,16 +69,15 @@ function response(req, res) {
         req.on('end',function(){
             var POST = qs.parse(body);
             if(Object.keys(POST).length != 1){
-                console.log('Warn :与えられた値が不正です。')
+                console.log('Warn : 与えられた値が不正です。');
             } else {
                 console.log('Posted :' + POST.id);
                 var url = 'http://furyu.nazo.cc/twicon/' + POST.id + '/original';
                 var filetype = '';
-                var imgtype + '';
+                var imgtype = '';
                 res.writeHead(200, {'Content-Type': 'text/html'});
                 res.write(url);
                 res.end();
-
                 console.log('Getting Avater...')
                 request(url, function(err, res, bod){
                     filetype = res.headers['content-type'];
@@ -59,8 +94,37 @@ function response(req, res) {
                         return 1;
                     }
                     console.log('File-Type:' + filetype);
-                    fs.createReadStream('./temp/profileimage.data').pipe(fs.createWriteStream('./images/'+POST.id+'.'+imgtype));
-                    
+                    var readstream = fs.createReadStream('./temp/profileimage.data')
+                        .pipe(fs.createWriteStream('./images/'+POST.id+'.'+imgtype));
+                    console.log('Copying: ' + './images/'+POST.id+'.'+imgtype);
+                    readstream.on('finish',function(){
+                        try {
+                            fs.mkdirSync('./slices/' + POST.id);
+                            console.log('Folder : Created');
+                        } catch(err) {
+                            console.log('Folder : Already created');
+                        }
+                        console.log('Convert: Converting...');
+                        im.convert(['./images/'+POST.id+'.'+imgtype , '-resize', '600x600', './slices/'+POST.id+'/original.png'], 
+                            function(err, stdout){
+                                if (err != null){
+                                    console.log('Convert: ' + err);
+                                } else {
+                                    console.log('Convert: File converted ' + './slices/'+POST.id+'.png');
+                                }
+                            },function(){
+                                im.convert(['./slices/'+POST.id+'/original.png', '-crop', '200x200', './slices/'+POST.id+'/slide.webp'], 
+                                    function(err){
+                                        if (err != null){
+                                            console.log('Convert: ' + err);
+                                        } else {
+                                            console.log('Convert: File sliced ' + './images/'+POST.id+'-*.webp');
+                                        }
+                                    }
+                                );
+                            }
+                        );
+                    });
                 }).pipe(fs.createWriteStream('./temp/profileimage.data'));
             }
         });
@@ -76,21 +140,14 @@ function response(req, res) {
         fs.readFile('.'+req.url, 'utf-8', responseCSS);
     } else if(req.url.indexOf('.png') != -1) {
         fs.readFile('.'+req.url, responseIMG);
+    } else if(req.url.indexOf('.webp') != -1) {
+        fs.readFile('.'+req.url, responseWEBP);
     } else if(req.url.indexOf('/wait') != -1) {
         readUserMsg();
     }
 }
 
-var http = require('http');
-var server = http.createServer();
-var fs = require('fs');
-var exec = require('child_process').exec;
-var iconv = require('iconv-lite');
-var qs = require('querystring');
-var request = require('request');
-
 server.on('connection', function(){
-    console.log('Connected.');
 });
 
 server.on('request', response);
