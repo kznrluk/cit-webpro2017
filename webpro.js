@@ -1,6 +1,7 @@
 // WebPro.js
 var convertpass = 'magick';
-var cgipass = 'puzzle.exe'
+var cgipass = 'puzzle.exe';
+
 var http   = require('http');
 var server = http.createServer();
 var fs     = require('fs');
@@ -10,9 +11,7 @@ im.convert.path = convertpass;
 console.log('Set Convert Pass -> \'' + im.convert.path + '\'');
 console.log('Set CGI Pass -> \'' + im.convert.path + '\'');
 var qs     = require('querystring');
-
 var request = require('request');
-
 
 function response(req, res) {
     function responseIndex(err, html){
