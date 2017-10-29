@@ -1,0 +1,19 @@
+{
+  "name": "cit-webapp",
+  "version": "0.0.1",
+  "description": "Applications for CIT Web Programing.",
+  "main": "webpro.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kznrluk/cit-webapp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kznrluk/cit-webapp/issues"
+  },
+  "homepage": "https://github.com/kznrluk/cit-webapp#readme"
+}
