@@ -8,8 +8,6 @@ var exec   = require('child_process').exec;
 var im     = require('imagemagick');
 im.convert.path = convertpass;
 console.log('Set Convert Pass -> \'' + im.convert.path + '\'');
-
-var iconv  = require('iconv-lite');
 var qs     = require('querystring');
 
 var request = require('request');
@@ -25,21 +23,21 @@ function response(req, res) {
         var args = req.url.split(/\+|\?/);
         console.log(args);
         if (args.length == 1){
-            exec('puzzle.exe', function(error, stdout, stderr) {
+            exec('puzzle', function(error, stdout) {
                 if (error != null) {
                     console.log(error);
                 }
-                console.log('Exec puzzle.exe');
+                console.log('Exec puzzle binary');
                 res.writeHead(200,  {'Content-Type': 'text/html'});
                 res.write(stdout);
                 res.end();
             });
         } else {
-            exec('puzzle.exe ' + args[1] +' '+ args[2], function(error, stdout, stderr) {
+            exec('puzzle ' + args[1] +' '+ args[2], function(error, stdout) {
                 if (error != null) {
                     console.log(error);
                 }
-                console.log('Exec puzzle.exe');
+                console.log('Exec puzzle binary');
                 res.writeHead(200,  {'Content-Type': 'text/html'});
                 res.write(stdout);
                 res.end();
