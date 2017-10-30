@@ -29,7 +29,6 @@ void writecookie (struct stage map);
 void readcookie(struct stage map);
 void footer (struct stage map);
 
-
 int main (int argc, char *argv[]){
     int i, u;
     XU = 3;
