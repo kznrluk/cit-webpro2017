@@ -156,7 +156,7 @@ void outputhtml (struct stage map){
             } else {
                 printf("<td>");
                 if (judge(&map, i, u) && map.clear == 0){
-                    printf("<a href='puzzle.cgi?%d+%d'>", i, u);
+                    printf("<a href='puzzle.cgi?%d+%d+%s'>", i, u, map.user);
                 }
                 printf("<img src='./slices/%s/slide-%d.png'></td>\n", map.user, map.num[i][u]);
             }
@@ -235,7 +235,7 @@ printf("\
                     <p class=\"score\">Score : %d</p>\n\
                 </div>\n\
                 <div class=\"col-md-3 mx-auto text-center\">\n\
-                    <a href=\"./puzzle.cgi\"><button type=\"button\" class=\"btn btn-outline-success button\">Reset</button></a>\n\
+                    <a href=\"./puzzle.cgi+%s\"><button type=\"button\" class=\"btn btn-outline-success button\">Reset</button></a>\n\
                 </div>\n\
             </div>\n\
         </div>\n\
@@ -247,7 +247,7 @@ printf("\
     </footer>\n\
     </div>\n\
 </body>\n\
-</html>\n", map.count);
+</html>\n", map.count, map.user);
 }
 
 int outputdata(struct stage map){
