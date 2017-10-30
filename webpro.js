@@ -21,6 +21,13 @@ function response(req, res) {
         res.end();
     }
     function execpuzzle(){
+        if (req.url.match(/&|;|\(|\)|\||'|\*/) != null){
+            res.writeHead(400,  {'Content-Type': 'text/html'});
+            res.write('wrong args');
+            res.end();
+            console.log('WARN   : Wrong Args ' + req.url);
+            return -1;
+        }
         var args = req.url.split(/\+|\?/);
         if (args.length == 1){
             exec(cgipass + ' kznr_luk', function(error, stdout) {
@@ -170,8 +177,6 @@ function response(req, res) {
         fs.readFile('.'+req.url, 'utf-8', responseCSS);
     } else if(req.url.indexOf('.png') != -1) {
         fs.readFile('.'+req.url, responseIMG);
-    } else if(req.url.indexOf('.webp') != -1) {
-        fs.readFile('.'+req.url, responseWEBP);
     } else if(req.url.indexOf('.ico') != -1) {
         fs.readFile('.'+req.url, responseICO);
     } else if(req.url.indexOf('.js') != -1) {
