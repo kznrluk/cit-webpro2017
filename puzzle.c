@@ -45,11 +45,14 @@ int main (int argc, char *argv[]){
     map.sy = 0;
     map.clear = 0;
     strcpy(map.user,"kznr_luk");
-    
 
-    if(argc == 3){
+    if(argc >= 3){
+        if(argc == 4) strcpy(map.user,argv[3]);
         continuation(&map, atoi(argv[1]), atoi(argv[2]));
-    } else if (argc == 1) {
+    } else if(argc == 2) {
+        strcpy(map.user,argv[1]);
+        firstentry(&map);
+    } else if(argc == 1) {
         firstentry(&map);
     } else {
         printf("Arg Error.\n");
