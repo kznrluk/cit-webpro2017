@@ -21,7 +21,6 @@ function response(req, res) {
         res.end();
     }
     function execpuzzle(){
-        var yo = 'helloあ';
         if (req.url.match(/&|;|\(|\)|\||'|\*/) != null){
             res.writeHead(400,  {'Content-Type': 'text/html'});
             res.write('wrong args');
@@ -111,7 +110,7 @@ function response(req, res) {
             var POST = qs.parse(body);
             if(Object.keys(POST).length != 1){
                 console.log('Warn   : Arg Error');
-            } else if (POST.id.match(/^[\x20-\x7e]*$/) == null){
+            } else if (POST.id.match(/^[\x20-\x7e]*$/) == null || POST.id.match(/^[a-zA-Z0-9_]{1,50}$/) == null){
                 console.log('Warn   : Arg not ASCII');
                 return -1;
             } else {
