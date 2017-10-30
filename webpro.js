@@ -64,6 +64,16 @@ function response(req, res) {
             res.end();
         }
     }
+    function responseJS(err, css){
+        if (err) {
+            res.writeHead(404, {'Content-Type': 'text/html'});
+            res.end();
+        } else {
+            res.writeHead(200, {'Content-Type': 'text/javascript'});
+            res.write(css);
+            res.end();
+        }
+    }
     function responseIMG(err, png){
         if (err) {
             res.writeHead(404, {'Content-Type': 'image/png'});
@@ -166,6 +176,8 @@ function response(req, res) {
         fs.readFile('.'+req.url, responseWEBP);
     } else if(req.url.indexOf('.ico') != -1) {
         fs.readFile('.'+req.url, responseICO);
+    } else if(req.url.indexOf('.js') != -1) {
+        fs.readFile('.'+req.url, responseJS);
     } else if(req.url.indexOf('/wait') != -1) {
         readUserMsg();
     } else {
