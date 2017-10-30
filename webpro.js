@@ -162,8 +162,6 @@ function response(req, res) {
         });
     }
 
-    console.log('Requested: ' + req.url);
-
     if(req.url == '/'){
         fs.readFile('./entry.html', 'utf-8', responseIndex);
     } else if(req.url.indexOf('puzzle.cgi') != -1) {
