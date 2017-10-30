@@ -218,13 +218,13 @@ printf("<body>\n\
                 <h2 class=\"type-shine\">Congratulation!</h2>\n\
                 <p class=\"scores\">Your Score : %d</p>\n\
                 <a class=\"twitter-share-button\"\n\
-                    href=\"https://twitter.com/intent/tweet?text=txt\"\n\
+                    href=\"https://twitter.com/intent/tweet?text=I%%20got%%20%d%%20score%%20on%%20Twitter%%20Puzzle%%21%%20Let%%27s%%20play%%20-%%20http%%3a%%2f%%2fanyfrog%%2enet%%2fpuzzle%%2f\"\n\
                     data-size=\"large\">Tweet\n\
                 </a>\n\
             </div>\n\
         </div>\n\
     </div>\n\
-    <div class=\"jumbotron\">\n", map.count);
+    <div class=\"jumbotron\">\n", map.count, map.count);
 }
 
 void footer(struct stage map){
@@ -242,7 +242,7 @@ printf("\
     </div>\n\
     <footer class=\"footer\">\n\
         <div class=\"container\">\n\
-            <p class=\"footertext\">SlidePuzzle created by K. Sasa.</p>\n\
+            <p class=\"footertext\">SlidePuzzle created by @kznr_luk</p>\n\
         </div>\n\
     </footer>\n\
     </div>\n\
