@@ -27,7 +27,7 @@ function response(req, res) {
                 if (error != null) {
                     console.log(error);
                 }
-                console.log('Exec puzzle binary');
+                console.log('Exec   : Player Unknown first entry.');
                 res.writeHead(200,  {'Content-Type': 'text/html'});
                 res.write(stdout);
                 res.end();
@@ -37,7 +37,7 @@ function response(req, res) {
                 if (error != null) {
                     console.log(error);
                 }
-                console.log('Exec puzzle binary');
+                console.log('Exec   : Player ' + args[1] + ' first entry.');
                 res.writeHead(200,  {'Content-Type': 'text/html'});
                 res.write(stdout);
                 res.end();
@@ -47,7 +47,7 @@ function response(req, res) {
                 if (error != null) {
                     console.log(error);
                 }
-                console.log('Exec puzzle binary');
+                console.log('Exec   : Player ' + args[3] + ' continue.');
                 res.writeHead(200,  {'Content-Type': 'text/html'});
                 res.write(stdout);
                 res.end();
