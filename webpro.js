@@ -22,7 +22,6 @@ function response(req, res) {
     }
     function execpuzzle(){
         var args = req.url.split(/\+|\?/);
-        console.log(args);
         if (args.length == 1){
             exec(cgipass + ' kznr_luk', function(error, stdout) {
                 if (error != null) {
@@ -100,7 +99,7 @@ function response(req, res) {
                 var filetype = '';
                 var imgtype = '';
                 res.writeHead(200, {'Content-Type': 'text/html'});
-                res.write(url);
+                res.write('Loading');
                 res.end();
                 console.log('Getting Avater...')
                 request(url, function(err, res, bod){
@@ -129,7 +128,7 @@ function response(req, res) {
                             console.log('Folder : Already created');
                         }
                         console.log('Convert: Converting...');
-                        im.convert(['./images/'+POST.id+'.'+imgtype , '-resize', '600x600', './slices/'+POST.id+'/original.png'], 
+                        im.convert(['./images/'+POST.id+'.'+imgtype , '-resize', '600x600!', './slices/'+POST.id+'/original.png'], 
                             function(err, stdout){
                                 if (err != null){
                                     console.log('Convert: ' + err);
