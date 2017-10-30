@@ -192,7 +192,7 @@ void header(struct stage map){
 printf("<!DOCTYPE html>\n\
 <html>\n\
 <head>\n\
-    <title>🍫Chocolate Puzzle🍫</title>\n\
+    <title>Twitter Puzzle</title>\n\
     <link href=\"css/bootstrap.min.css\" rel=\"stylesheet\">\n\
     <link href=\"css/chocolate.css\" rel=\"stylesheet\">\n\
     <link href=\"https://fonts.googleapis.com/css?family=Modak|Titillium+Web\" rel=\"stylesheet\">\n");
@@ -210,7 +210,7 @@ printf("<!DOCTYPE html>\n\
 printf("</head>\n");
 printf("<body>\n\
     <div id=\"contents\">\n\
-    <h1 class=\"text-center title\">🍫Chocolate Puzzle🍫</h1><br>\n\
+    <h1 class=\"text-center title\">Twitter Puzzle</h1><br>\n\
     <div id=\"modal\">\n\
         <div id=\"clear\">\n\
             <a href=\"#\" class=\"close_overlay\">x</a>\n\
