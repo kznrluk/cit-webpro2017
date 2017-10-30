@@ -21,24 +21,25 @@ function response(req, res) {
         res.end();
     }
     function execpuzzle(){
+        var yo = 'helloあ';
         if (req.url.match(/&|;|\(|\)|\||'|\*/) != null){
             res.writeHead(400,  {'Content-Type': 'text/html'});
             res.write('wrong args');
             res.end();
             console.log('WARN   : Wrong Args ' + req.url);
             return -1;
+        } else if (req.url.match('%') != null){
+            res.writeHead(400,  {'Content-Type': 'text/html'});
+            res.write('Error: Posted not TwitterID');
+            res.end();
+            console.log('WARN   : Posted not ASCII ' + req.url);
+            return -1;
         }
         var args = req.url.split(/\+|\?/);
         if (args.length == 1){
-            exec(cgipass + ' kznr_luk', function(error, stdout) {
-                if (error != null) {
-                    console.log(error);
-                }
-                console.log('Exec   : Player Unknown first entry.');
-                res.writeHead(200,  {'Content-Type': 'text/html'});
-                res.write(stdout);
-                res.end();
-            });
+            res.writeHead(400,  {'Content-Type': 'text/html'});
+            res.write('Error: It is not Twiter ID. Please back and enter TwitterID.');
+            res.end();            
         } else if (args.length == 2){
             exec(cgipass + ' ' + args[1], function(error, stdout) {
                 if (error != null) {
@@ -109,7 +110,10 @@ function response(req, res) {
         req.on('end',function(){
             var POST = qs.parse(body);
             if(Object.keys(POST).length != 1){
-                console.log('Warn : Arg Error');
+                console.log('Warn   : Arg Error');
+            } else if (POST.id.match(/^[\x20-\x7e]*$/) == null){
+                console.log('Warn   : Arg not ASCII');
+                return -1;
             } else {
                 console.log('Posted :' + POST.id);
                 var url = 'http://furyu.nazo.cc/twicon/' + POST.id + '/original';
