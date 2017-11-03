@@ -3,24 +3,17 @@
 <head>
 	<meta charset="utf-8">
 	<title>Twitter Puzzle</title>
-	<!-- Loading CSS -->
+	<!-- Loading CSSs -->
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/chocolate.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Modak|Titillium+Web" rel="stylesheet">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<!-- Loading Scripts -->
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.js"
 		integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
 		crossorigin="anonymous"></script>
-	<script>
-		var socket = io('http://localhost:3000');
-		socket.on('hello', function () {
-			socket.emit('world');
-		});
-		function pushplay(){
-			io.emit("pushplay");
-		}
-	</script>
+	<script src="/js/script.js"></script>
 </head>
 <body>
 	<div class="contents">
@@ -29,7 +22,7 @@
 	<div class="jumbotron">
 		<div class="row">
 			<div class="mx-auto">
-				<h2 class="title2">Enter Your TwitterID Without @</h2>
+				<h2 class="title2">Enter Your TwitterID</h2>
 			</div>
 		</div>
 		<div class="container">
@@ -38,7 +31,7 @@
 					<form class="form-inline">
 						<form class="form-group mx-sm-3">
 							<input type="text" class="form-control form-control-lg" id="id" placeholder="kznr_luk">
-							<button type="submit" class="btn btn-primary btn-lg" onclick="pushplay();">Play</button>
+							<button class="btn btn-primary btn-lg">Play</button>
 						</form>
 					</form>
 				</div>
