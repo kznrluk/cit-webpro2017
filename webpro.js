@@ -2,24 +2,38 @@
 var convertpass = 'magick';
 var cgipass = 'puzzle.exe';
 
-var http   = require('http');
-var server = http.createServer();
-var io     = require('socket.io').listen(server);
-var fs     = require('fs');
-var exec   = require('child_process').exec;
-var im     = require('imagemagick');
-im.convert.path = convertpass;
-console.log('Set Convert Pass -> \'' + im.convert.path + '\'');
-console.log('Set CGI Pass -> \'' + im.convert.path + '\'');
-var qs     = require('querystring');
+var http    = require('http');
+var server  = http.createServer();
+var io      = require('socket.io')(server);
+var fs      = require('fs');
+var exec    = require('child_process').exec;
+var im      = require('imagemagick');
+var qs      = require('querystring');
 var request = require('request');
 
+im.convert.path = convertpass;
+console.log('Set Convert Pass -> \'' + im.convert.path + '\'');
+console.log('Set CGI Pass -> \'' + cgipass + '\'');
+
+server.on('request', handler);
+
+function handler (req, res) {
+    fs.readFile(__dirname + '/entry.html',
+    function (err, data) {
+      if (err) {
+        res.writeHead(500);
+        return res.end('Error loading index.html');
+      }
+  
+      res.writeHead(200);
+      res.end(data);
+    });
+}
+
+
+server.listen(3000);
+
 function response(req, res) {
-    function responseIndex(err, html){
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(html);
-        res.end();
-    }
     function execpuzzle(){
         if (req.url.match(/&|;|\(|\)|\||'|\*/) != null){
             res.writeHead(400,  {'Content-Type': 'text/html'});
@@ -187,20 +201,15 @@ function response(req, res) {
     } else if(req.url.indexOf('/wait') != -1) {
         readUserMsg();
     } else {
-        res.writeHead(400, {'Content-Type': 'text/html'});
+        res.writeHead(404, {'Content-Type': 'text/html'});
         res.end();
     }
 }
 
-io.sockets.on('connection', function(socket) {
-    socket.emit('greeting', {message: 'hello'}, function (data) {
-        console.log('result: ' + data);
-    });
-});
 
-server.on('connection', function(){
-});
 
-server.on('request', response);
-server.listen(3000);
+function pushplay(){
+    console.log("Socket.IO: Push Play botun.")
+}
+
 console.log('Server started.');
