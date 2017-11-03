@@ -1,80 +1,41 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<meta charset="utf-8">
-		<title>Twitter Puzzle</title>
-	  <!-- BootstrapのCSS読み込み -->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<link href="css/chocolate.css" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Modak|Titillium+Web" rel="stylesheet">
-    <!-- Font Awesome -->
-		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-		<script src="/socket.io/socket.io.js"></script>
-		<script
-		src="https://code.jquery.com/jquery-3.2.1.js"
+<head>
+	<meta charset="utf-8">
+	<title>Twitter Puzzle</title>
+	<!-- Loading CSSs -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/chocolate.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Modak|Titillium+Web" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<!-- Loading Scripts -->
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.js"
 		integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
 		crossorigin="anonymous"></script>
-		<script>
-			// ひどすぎるので後で直す
-			var par = 0;
-			function prog1(){
-					par = par + 10;
-					$('.progress-bar').css('width', par + '%');
-			}
-			function comp(){
-				jumpPage();
-			}
-			function jumpPage() {
-				var url = './puzzle.cgi?' + document.form.id.value
-				location.href = url;
-				return false;
-			}
-			function postdata(){
-				var value = document.form.id.value;
-				var form = document.createElement('form');
-				form.method = 'POST';
-				form.action = './wait';
-				form.target = 'iframe';
-				var reqid = document.createElement('input');
-				reqid.name = 'id';
-				reqid.value = value;
-				form.appendChild(reqid);
-				document.body.appendChild(form);
-				form.submit();
-				return false;
-			}
-			// あとで直す
-			function wait1sec(){
-				postdata();
-				var count = setInterval(function(){
-					prog1();
-					if(par == 100){
-						clearInterval(count);
-						setTimeout(comp, 650);
-					}}, 150);
-			}
-		</script>
-	</head>
-	<body>
-		<div class="contents">
-				<h1 class="text-center title">Twitter Puzzle</h1>
+	<script src="/js/script.js"></script>
+</head>
+<body>
+	<div class="contents">
+		<h1 class="text-center title">Twitter Puzzle</h1>
+	</div>
+	<div class="jumbotron">
+		<div class="row">
+			<div class="mx-auto">
+				<h2 class="title2">Enter Your TwitterID</h2>
+			</div>
 		</div>
 		<div class="container">
-			<form name="form">
-					<div class="form-group">
-							<h3 class="title">Enter Your Twitter ID without @</h3>
-							<input type="text" name="id" pattern="[a-zA-Z0-9_]" title="＠無しのTwitterIDを入力してください。" class="form-control">
-					</div>
-					<button type="submit" class="btn btn-primary mx-auto" onClick="wait1sec();return false;">PLAY</button>
-			</form>
-			<br>
-			<div class="progress">
-					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-					</div>
+			<div class="row">
+				<div class="col">
+					<form class="form-inline">
+						<form class="form-group mx-sm-3">
+							<input type="text" class="form-control form-control-lg" id="id" placeholder="kznr_luk">
+							<button class="btn btn-primary btn-lg">Play</button>
+						</form>
+					</form>
+				</div>
 			</div>
+		</div>
 	</div>
-	<div class="container">
-		<iframe name="iframe" frameborder="0" width="300"></iframe>
-	</div>	
-	</body>
 </html>

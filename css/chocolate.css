@@ -12,6 +12,12 @@ h1 {
     margin-top: 50px;
 }
 
+.title2 {
+    font-family: 'Titillium Web', cursive;
+    font-size: 50px;
+    color: #795548;
+}
+
 .jumbotron {
     background-color: #D7CCC8;
 }
