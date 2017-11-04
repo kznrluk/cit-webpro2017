@@ -210,7 +210,7 @@ printf("<!DOCTYPE html>\n\
 printf("</head>\n");
 printf("<body>\n\
     <div id=\"contents\">\n\
-    <h1 class=\"text-center title\">Twitter Puzzle</h1><br>\n\
+    <a href=\"/\"><h1 class=\"text-center title\">Twitter Puzzle</h1></a><br>\n\
     <div id=\"modal\">\n\
         <div id=\"clear\">\n\
             <a href=\"#\" class=\"close_overlay\">x</a>\n\
