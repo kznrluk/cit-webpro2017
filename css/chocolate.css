@@ -158,6 +158,10 @@ div#modal div:target {
     100% {transform: rotate3d(0,0,1,-25deg) translate3d(0,150%,0);background: rgba(255,255,255,0.5);}
 }
 
+.loadmsg{
+    margin: 30px
+}
+
 .sk-cube-grid {
     width: 250px;
     height: 250px;
@@ -238,4 +242,26 @@ div#modal div:target {
     50%  {  }
     75%  { background-color : #FFF }
     100% {  }
+}
+
+.fade {
+    animation: fadeout 1s linear infinite;
+}
+
+@keyframes fadeout {
+    0%  { opacity: 1 }
+    50% { opacity: 0.5 }
+    100% { opacity: 1 }
+}
+
+
+.longfade {
+    color: #F44336;
+    animation: longfade 2.3s linear infinite;
+}
+
+@keyframes longfade {
+    0%  { opacity: 1 }
+    50% { opacity: 0 }
+    100% { opacity: 1 }
 }

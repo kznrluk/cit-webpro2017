@@ -199,15 +199,89 @@ function response(req, res) {
     }
 }
 
+
+
 io.on('connection', function (socket) {
+    function loadImg(id){
+        function downloaded(err, res,bod){
+            sentLoading("指定されたIDのアイコンを探しています。");
+            var filetype = res.headers['content-type'];
+            if (filetype.indexOf('png') != -1){
+                imgtype = 'png';
+            } else if (filetype.indexOf('jpeg') != -1){
+                imgtype = 'jpg';
+            } else if (filetype.indexOf('bmp') != -1){
+                imgtype = 'bmp';
+            } else if (filetype.indexOf('gif') != -1){
+                imgtype = 'gif';
+            } else {
+                sentIdError();
+                console.log('不明なファイルタイプ :' + filetype);
+                return 1;
+            }
+            console.log('Copying: ' + './images/'+id+'.'+imgtype);
+            console.log('File-Type:' + filetype);
+            sentLoading("アイコンのダウンロードをダウンロードします。");
+            var readstream = fs.createReadStream('./images/profileimagetemp.data')
+                             .pipe(fs.createWriteStream('./images/'+id+'.'+imgtype));
+            readstream.on('finish', converting);
+        }
+        function converting(){
+            try {
+                fs.mkdirSync('./slices/' + id);
+                console.log('Folder : Created');
+            } catch(err) {
+                console.log('Folder : Already created');
+            }
+            sentLoading("アイコンをスライドパズル用に変換しています。");
+            console.log('Convert: Converting...');
+            im.convert(['./images/'+id+'.'+imgtype , '-resize', '600x600!', './slices/'+id+'/original.png'], 
+                function(err, stdout){
+                    if (err != null){
+                        console.log('Convert: ' + err);
+                    } else {
+                        console.log('Convert: File converted ' + './slices/'+id+'.png');
+                    }
+                    im.convert(['./slices/'+id+'/original.png', '-crop', '200x200', './slices/'+id+'/slide.png'], 
+                        function(err){
+                            if (err != null){
+                                console.log('Convert: ' + err);
+                            } else {
+                                console.log('Convert: File sliced ' + './images/'+id+'-*.png');
+                                sentFinish(id);
+                            }
+                        }
+                    );
+                }
+            );
+        }
+        console.log('loadImg: Posted '+ id);
+        var url = 'http://furyu.nazo.cc/twicon/' + id + '/original';
+        var readstream = request(url, downloaded).pipe(fs.createWriteStream('./images/profileimagetemp.data'));
+    }
+
     var ipaddr = socket.handshake.address;
     socket.emit('hello');
     socket.on('world', function () {
       console.log('Socket.io: Connected by ' + ipaddr);
     });
-    socket.on('twitterid', function(id){
+    socket.on('twitterid', function(data){
+        var id = data.toLowerCase();
         console.log('Socket.io: Player join using ' + id);
+        socket.emit('message', {value: 'TwitterID: @' + data + 'でプレイを開始します。'});
+        loadImg(id);
     });
+    function sentLoading(msg){
+        socket.emit('message', {value: msg});
+    }
+    function sentFinish(id){
+        sentLoading("すべての準備が整いました。");
+        socket.emit('gopuzzle', {value: id});
+    }
+    function sentIdError(){
+        var msg = "指定されたIDは存在しないか現在利用できません。もう一度お試しください。"
+        socket.emit('errs', {value: msg});
+    }
 });
 
 server.listen(3001);

@@ -4,6 +4,26 @@ socket.on('hello', function () {
 	socket.emit('world');
 });
 
+socket.on('message', function(msg){
+    var msgbox = document.getElementById('loadmsg');
+    $('#loadmsg').addClass('fade');
+    msgbox.innerHTML = msg.value;
+})
+
+socket.on('errs', function(msg){
+    var msgbox = document.getElementById('loadmsg');
+    $('#loadmsg').removeClass('fade');
+    $('#loadmsg').addClass('longfade');
+    msgbox.innerHTML = msg.value;
+    document.getElementById("id").disabled = false;
+})
+
+socket.on('gopuzzle', function(id){
+    var url = './puzzle.cgi?' + id.value;
+    location.href = url;
+})
+
+
 $(function () {
     $('form').submit(function(){
         if(leadValue()){
