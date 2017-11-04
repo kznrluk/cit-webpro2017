@@ -29,8 +29,8 @@ h1 {
 }
 
 .atmark {
-    color: #3E2723;
-    font-size:110%;
+    color: #795548;
+    font-size:115%;
     font-weight: bold;
 }
 
@@ -219,3 +219,23 @@ div#modal div:target {
               transform: scale3D(0, 0, 1);
     } 
   }
+
+.spin {
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
+
+.flash {
+    animation: flash 0.7s linear infinite;
+}
+@keyframes flash {
+    0%   {  }
+    25%  { background-color : #FFF }
+    50%  {  }
+    75%  { background-color : #FFF }
+    100% {  }
+}
